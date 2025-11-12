@@ -1,0 +1,69 @@
+spring:
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: "guest"
+    password: "guest"
+
+  application:
+    name: marque
+
+  datasource:
+    # For Docker (MySQL)
+    # url: jdbc:mysql://mysqldb:3306/test?useSSL=false&serverTimezone=UTC
+    # username: root
+    # password: root
+    # driver-class-name: com.mysql.cj.jdbc.Driver
+
+    # For local (H2)
+    url: jdbc:h2:mem:marquedb
+    driver-class-name: org.h2.Driver
+
+  h2:
+    console:
+      enabled: true
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.H2Dialect
+
+  cloud:
+    config:
+      enabled: true
+    discovery:
+      enabled: true
+
+  config:
+    import: optional:configserver:${CONFIG_SERVICE_URL:http://localhost:9999}
+
+  profiles:
+    active: default
+
+server:
+  port: 8090
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${DISCOVERY_SERVICE_URL:http://localhost:8761/eureka}
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+build:
+  version: 1.0
+
+author:
+  name: houssem ben jaafar marque
+  email: houssembenjaafar105@gmail.com

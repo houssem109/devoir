@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: "configserver"
+  profiles:
+    active: git
+    # active: native
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/houssem109/config-repo.git
+          default-label: main
+          clone-on-start: true
+        # native:
+        #   search-locations: "C:/Users/houss/Desktop/fac/spring-boot/config-repo"
+
+server:
+  port: 9999
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+        - "*"

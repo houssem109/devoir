@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: pc
+
+  datasource:
+    url: jdbc:h2:mem:pcdb
+
+  h2:
+    console:
+      enabled: true
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+  cloud:
+    config:
+      enabled: false
+    discovery:
+      enabled: true
+
+server:
+  port: 8081
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

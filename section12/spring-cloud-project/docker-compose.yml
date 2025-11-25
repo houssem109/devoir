@@ -19,20 +19,31 @@ services:
     networks:
       - spring-net
 
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.3.4
+    container_name: keycloak
+    command: start-dev
+    environment:
+      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+    ports:
+      - "8092:8080"
+    networks:
+      - spring-net
+
   marques-ms:
     build: ./marque-microservice
     container_name: marques-ms
     environment:
       - DISCOVERY_SERVICE_URL=http://eurekaserver:8761/eureka
       - CONFIG_SERVICE_URL=http://configserver:9999
-    healthcheck:
-      test: ["CMD-SHELL", "curl --fail --silent localhost:8090/actuator/health | grep UP || exit 1"]
-      interval: 10s
     depends_on:
       eurekaserver:
         condition: service_healthy
       configserver:
         condition: service_healthy
+      keycloak:
+        condition: service_started
     networks:
       - spring-net
 
@@ -42,14 +53,13 @@ services:
     environment:
       - DISCOVERY_SERVICE_URL=http://eurekaserver:8761/eureka
       - CONFIG_SERVICE_URL=http://configserver:9999
-    healthcheck:
-      test: ["CMD-SHELL", "curl --fail --silent localhost:8090/actuator/health | grep UP || exit 1"]
-      interval: 10s
     depends_on:
       eurekaserver:
         condition: service_healthy
       configserver:
         condition: service_healthy
+      keycloak:
+        condition: service_started
     networks:
       - spring-net
 
@@ -65,7 +75,9 @@ services:
       configserver:
         condition: service_healthy
       marques-ms:
-        condition: service_healthy
+        condition: service_started
+      keycloak:
+        condition: service_started
     networks:
       - spring-net
 
@@ -79,6 +91,8 @@ services:
     depends_on:
       eurekaserver:
         condition: service_healthy
+      keycloak:
+        condition: service_started
     networks:
       - spring-net
 
